@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.idea
+build/
+dist/
+*.iml
+*~
+*.egg-info
+*DS_Store
+*belvedere/s/js/key.js
+*.log
