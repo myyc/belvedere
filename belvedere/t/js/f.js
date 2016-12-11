@@ -5,13 +5,29 @@ var p = {
         season: {{ season }},
         sport: "football",
         team: {{ team }},
-        match: {{ gid }}
+        match: {{ gid }},
+        player: {{ player }}
     }
 };
 
 var d = new $jqOpta.Deferred;
 d.done(function (a) {
-    document.getElementById("main").innerHTML = JSON.stringify(a);
+    var s = pako.deflate(JSON.stringify(a));
+    var r = [],
+        l = s.length,
+        cs = 65535;
+
+    // lol
+    if (s.slice === undefined) {
+        s.slice = Array.prototype.slice;
+    }
+
+    for (var i = 0; i < l / cs; i++) {
+        r.push(btoa(String.fromCharCode.apply(null, s.slice(i*cs, (i+1)*cs))))
+    }
+
+    document.getElementById("main").innerHTML = r.join("");
+    document.getElementById("conf").innerHTML = "yes";
 });
 
 var f = new $jqOpta.FeedRequest(

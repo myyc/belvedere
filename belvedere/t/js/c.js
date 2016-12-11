@@ -5,31 +5,41 @@ d.resolveWith = function (a, b) {
 };
 
 d.done = function (a) {
-    var teams = [];
+    var t = [];
     a = a.split("¦");
+    var d = ["id", "full", "short", "abbr"];
 
     for (var b = 0; b < a.length; b++) {
         var c = a[b].split("|");
-        if (c[1] && c[1].length > 0) {
-            teams.push({id: c[0], full: c[1], short: c[2], abbr: c[3]});
+        if (c[0] && c[0].length > 0) {
+            var o = {id: parseInt(c[0])};
+            for(var i = 1; i < 4; i++) {
+                if(c[i] && c[i].length > 0) {
+                    o[d[i]] = c[i];
+                }
+            }
+            if("full" in o) {
+                t.push(o);
+            }
         }
     }
-
-    document.getElementById("main").innerHTML = JSON.stringify(teams);
+    var s = JSON.stringify(t);
+    document.getElementById("main").innerHTML = btoa(String.fromCharCode.apply(null, pako.deflate(s)));
+    document.getElementById("conf").innerHTML = "yes";
 };
 
 var p = {
     competition: {{ cid }},
     cust_id: "default",
-    trans_id: $jqOpta.settings.translation_id || 1,
+    trans_id: 1,
     lang_id: "en_GB",
     sport_id: "1",
     season: {{ season }}
 };
 
-var teamRequest = new $jqOpta.FeedRequest(
+var r = new $jqOpta.FeedRequest(
     $jqOpta.FeedRequest.{{ feed }},
     p,
     d,
     99999);
-$jqOpta.FeedMonitor.requestFeed(teamRequest);
+$jqOpta.FeedMonitor.requestFeed(r);
