@@ -7,7 +7,6 @@ d.resolveWith = function (a, b) {
 d.done = function (a) {
     var t = [];
     a = a.split("¦");
-    var d = ["id", "full", "short", "abbr"];
 
     for (var b = 0; b < a.length; b++) {
         var c = a[b].split("|");
@@ -15,12 +14,13 @@ d.done = function (a) {
             var o = {id: parseInt(c[0])};
             for(var i = 1; i < 4; i++) {
                 if(c[i] && c[i].length > 0) {
-                    o[d[i]] = c[i];
+                    o[i] = c[i];
                 }
             }
-            if("full" in o) {
+/*            if("full" in o) {
                 t.push(o);
-            }
+            }*/
+            t.push(o);
         }
     }
     var s = JSON.stringify(t);
@@ -34,7 +34,8 @@ var p = {
     trans_id: 1,
     lang_id: "en_GB",
     sport_id: "1",
-    season: {{ season }}
+    season: {{ season }},
+    team: {{ team }}
 };
 
 var r = new $jqOpta.FeedRequest(

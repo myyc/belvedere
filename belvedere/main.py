@@ -24,9 +24,9 @@ class Root:
         return env.get_template("main.html")
 
     @cherrypy.expose
-    def jc(self, feed, cid="null", season=2016):
+    def jc(self, feed, cid="null", season=2016, team="null"):
         t = env.get_template("js/c.js")
-        return t.render(season=season, cid=cid, feed=feed)
+        return t.render(season=season, cid=cid, feed=feed, team=team)
 
     @cherrypy.expose
     def jf(self, feed, season=2016, cid="null", team="null", gid="null",
@@ -45,9 +45,10 @@ class Root:
                                    season=season, player=player)
 
     @cherrypy.expose
-    def hc(self, feed, cid="null", season=2016):
+    def hc(self, feed, cid="null", season=2016, team="null"):
         t = self.get_main()
-        return t.render(route="/jc/{}/{}/{}".format(feed, cid, season))
+        return t.render(route="/jc/{}/{}/{}/{}".format(feed, cid, season,
+                                                       team))
 
     @cherrypy.expose
     def hf(self, feed, season=2016, cid="null", team="null", gid="null",
@@ -89,8 +90,8 @@ class Root:
         return t
 
     @cherrypy.expose
-    def c(self, feed, cid="null", season=2016):
-        url = "/hc/{}/{}/{}".format(feed, cid, season)
+    def c(self, feed, cid="null", season=2016, team="null"):
+        url = "/hc/{}/{}/{}/{}".format(feed, cid, season, team)
 
         return self.scrape(url)
 
@@ -105,14 +106,21 @@ class Root:
     @cherrypy.expose
     def comps(self, season=2016):
         feed = "FEED_TRANS_COMP"
-        url = "/hc/{}/null/{}/".format(feed, season)
+        url = "/hc/{}/null/{}/null".format(feed, season)
 
         return self.scrape(url)
 
     @cherrypy.expose
-    def clubs(self, cid, season=2016):
+    def teams(self, cid, season=2016):
         feed = "FEED_TRANS_TEAM"
-        url = "/hc/{}/{}/{}".format(feed, cid, season)
+        url = "/hc/{}/{}/{}/null".format(feed, cid, season)
+
+        return self.scrape(url)
+
+    @cherrypy.expose
+    def team(self, cid, team, season=2016):
+        feed = "FEED_TRANS_PLAYER"
+        url = "/hc/{}/{}/{}/{}".format(feed, cid, season, team)
 
         return self.scrape(url)
 
